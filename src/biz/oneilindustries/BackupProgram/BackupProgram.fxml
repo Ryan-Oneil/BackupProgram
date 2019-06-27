@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+
+<AnchorPane fx:id="MainWindow" minHeight="-Infinity" minWidth="-Infinity" prefHeight="548.0" prefWidth="600.0" style="-fx-background-color: #3D4956;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="biz.oneilindustries.BackupProgram.Controller">
+   <children>
+      <AnchorPane fx:id="homePage" layoutY="76.0" minWidth="-Infinity" prefHeight="531.0" prefWidth="600.0" style="-fx-background-color: #3D4956;" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="76.0" />
+      <AnchorPane layoutY="-2.0" prefHeight="78.0" prefWidth="600.0" style="-fx-background-color: #38434f;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="-2.0">
+         <children>
+            <HBox alignment="CENTER" layoutX="178.0" prefHeight="78.0" prefWidth="254.0">
+               <children>
+                  <ImageView fitHeight="68.0" fitWidth="97.0" onMouseClicked="#openHomePage" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@images/icons8-home-480.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="68.0" fitWidth="141.0" onMouseClicked="#openSettingsPage" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@images/setting.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </HBox>
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="settingsPage" layoutY="76.0" minWidth="-Infinity" prefHeight="531.0" prefWidth="600.0" style="-fx-background-color: #3D4956;">
+         <children>
+            <TableView fx:id="backupFoldersTable" layoutX="13.0" layoutY="14.0" prefHeight="463.0" prefWidth="574.0">
+               <columns>
+                  <TableColumn fx:id="folderName" prefWidth="176.0" text="Name" />
+                  <TableColumn fx:id="folderPath" prefWidth="395.0" text="Location" />
+               </columns>
+            </TableView>
+            <Button layoutX="263.0" layoutY="492.0" mnemonicParsing="false" onAction="#addFolder" text="Add Folder" />
+            <Button fx:id="deleteFolder" layoutX="347.0" layoutY="492.0" mnemonicParsing="false" onAction="#deleteFolder" text="Remove" />
+            <Button layoutX="194.0" layoutY="492.0" mnemonicParsing="false" onAction="#addFile" text="Add File" />
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>
