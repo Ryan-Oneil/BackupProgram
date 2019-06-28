@@ -4,6 +4,7 @@ import java.io.File;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.DirectoryChooser;
@@ -14,6 +15,7 @@ public class Controller {
 
     private Settings settings;
     private Locations foldersToBackup;
+    private Location backupDestPath;
 
     @FXML
     private AnchorPane MainWindow;
@@ -33,16 +35,24 @@ public class Controller {
     @FXML
     private TableView<Location> backupFoldersTable;
 
+    @FXML
+    private TextField backupDest;
+
     private Stage stage;
 
     public void initialize() {
         settings = new Settings();
         foldersToBackup = settings.getFilesToBackupPath();
+        backupDestPath = settings.getDestination();
 
         folderName.setCellValueFactory(new PropertyValueFactory<>("folderName"));
         folderPath.setCellValueFactory(new PropertyValueFactory<>("folderPath"));
 
         updateTableList(foldersToBackup, backupFoldersTable);
+    }
+
+    public void setupStage(Stage stage) {
+        this.stage = stage;
     }
 
     @FXML
@@ -77,8 +87,6 @@ public class Controller {
 
     @FXML
     public void addFolder() {
-        stage = (Stage) MainWindow.getScene().getWindow();
-
         DirectoryChooser directoryChooser = new DirectoryChooser();
         File selectedDirectory = directoryChooser.showDialog(stage);
 
@@ -89,7 +97,7 @@ public class Controller {
 
     @FXML
     public void addFile() {
-        stage = (Stage) MainWindow.getScene().getWindow();
+        //stage = (Stage) MainWindow.getScene().getWindow();
 
         FileChooser fileChooser = new FileChooser();
         File selectedFile = fileChooser.showOpenDialog(stage);
@@ -103,5 +111,24 @@ public class Controller {
     public void deleteFolder() {
         foldersToBackup.deleteLocation(backupFoldersTable.getSelectionModel().getSelectedItem());
         updateTableList(foldersToBackup, backupFoldersTable);
+    }
+
+    @FXML
+    public void doBackup() {
+        Thread backup = new Backup(settings.getFilesToBackupPath(),settings.getDestination());
+        backup.start();
+    }
+
+    @FXML
+    public void chooseDirectoryDest() {
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+
+        File directory = directoryChooser.showDialog(stage);
+
+        if (directory != null) {
+            backupDestPath = new Location(directory.getName(),directory.getAbsolutePath());
+            backupDest.setText(backupDestPath.getFolderPath());
+            settings.setDestination(backupDestPath);
+        }
     }
 }

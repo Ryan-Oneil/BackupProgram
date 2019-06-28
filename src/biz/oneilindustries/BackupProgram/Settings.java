@@ -12,13 +12,12 @@ import java.util.Scanner;
 public class Settings {
 
     private static Locations filesToBackupPath;
-    private Locations destination;
+    private static Location destination;
     //private static final Logger logger = LogManager.getLogger(Settings.class);
 
     public Settings() {
         if (filesToBackupPath == null) {
             filesToBackupPath = new Locations();
-            System.out.println("Creating new settings object");
             if (new File("locations.txt").isFile()) {
                 getSettings();
             }
@@ -33,12 +32,12 @@ public class Settings {
         filesToBackupPath = locations;
     }
 
-    public Locations getDestination() {
+    public Location getDestination() {
         return destination;
     }
 
-    public void setDestination(Locations destination) {
-        this.destination = destination;
+    public void setDestination(Location destinationPath) {
+        destination = destinationPath;
     }
 
     public Boolean saveSettings() {
@@ -46,6 +45,7 @@ public class Settings {
             for (Location location : filesToBackupPath.getLocations()) {
                 locationFile.write(location.getFolderName() + "," + location.getFolderPath() + "\n");
             }
+            locationFile.write("backupDest," + destination.getFolderName() + "," + destination.getFolderPath());
             return true;
         } catch (IOException e) {
             e.printStackTrace();
@@ -59,9 +59,16 @@ public class Settings {
             while (scanner.hasNextLine()) {
                 String fileName = scanner.next();
                 scanner.skip(scanner.delimiter());
-                String filePath = scanner.nextLine();
-                System.out.println(fileName + " " + filePath);
-                filesToBackupPath.addLocation(new Location(fileName,filePath));
+
+                if (!fileName.equals("backupDest")) {
+                    String filePath = scanner.nextLine();
+                    System.out.println(fileName + " " + filePath);
+                    filesToBackupPath.addLocation(new Location(fileName, filePath));
+                }else {
+                    fileName = scanner.next();
+                    String filePath = scanner.nextLine();
+                    destination = new Location(fileName, filePath);
+                }
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();

@@ -1,16 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="MainWindow" minHeight="-Infinity" minWidth="-Infinity" prefHeight="548.0" prefWidth="600.0" style="-fx-background-color: #3D4956;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="biz.oneilindustries.BackupProgram.Controller">
    <children>
-      <AnchorPane fx:id="homePage" layoutY="76.0" minWidth="-Infinity" prefHeight="531.0" prefWidth="600.0" style="-fx-background-color: #3D4956;" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="76.0" />
+      <AnchorPane fx:id="homePage" layoutY="76.0" minWidth="-Infinity" prefHeight="531.0" prefWidth="600.0" style="-fx-background-color: #3D4956;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="76.0">
+         <children>
+            <Button layoutX="274.0" layoutY="433.0" mnemonicParsing="false" onAction="#doBackup" text="Backup" />
+            <Label layoutX="115.0" layoutY="330.0" text="Backup Destination" textFill="WHITE">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Label>
+            <TextField fx:id="backupDest" layoutX="284.0" layoutY="331.0" onMouseClicked="#chooseDirectoryDest" />
+            <ProgressBar layoutX="194.0" layoutY="394.0" prefHeight="26.0" prefWidth="213.0" progress="0.0" />
+         </children></AnchorPane>
       <AnchorPane layoutY="-2.0" prefHeight="78.0" prefWidth="600.0" style="-fx-background-color: #38434f;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="-2.0">
          <children>
             <HBox alignment="CENTER" layoutX="178.0" prefHeight="78.0" prefWidth="254.0">
@@ -29,7 +43,7 @@
             </HBox>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="settingsPage" layoutY="76.0" minWidth="-Infinity" prefHeight="531.0" prefWidth="600.0" style="-fx-background-color: #3D4956;">
+      <AnchorPane fx:id="settingsPage" layoutY="76.0" minWidth="-Infinity" prefHeight="531.0" prefWidth="600.0" style="-fx-background-color: #3D4956;" visible="false">
          <children>
             <TableView fx:id="backupFoldersTable" layoutX="13.0" layoutY="14.0" prefHeight="463.0" prefWidth="574.0">
                <columns>
