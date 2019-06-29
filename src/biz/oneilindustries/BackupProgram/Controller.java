@@ -44,6 +44,7 @@ public class Controller {
         settings = new Settings();
         foldersToBackup = settings.getFilesToBackupPath();
         backupDestPath = settings.getDestination();
+        backupDest.setText(backupDestPath.getFolderPath());
 
         folderName.setCellValueFactory(new PropertyValueFactory<>("folderName"));
         folderPath.setCellValueFactory(new PropertyValueFactory<>("folderPath"));
@@ -77,7 +78,7 @@ public class Controller {
         }
     }
 
-    public void updateTableList(Locations locations, TableView table) {
+    private void updateTableList(Locations locations, TableView table) {
         table.getItems().clear();
         for (Location path: locations.getLocations()) {
             table.getItems().add(path);
@@ -97,8 +98,6 @@ public class Controller {
 
     @FXML
     public void addFile() {
-        //stage = (Stage) MainWindow.getScene().getWindow();
-
         FileChooser fileChooser = new FileChooser();
         File selectedFile = fileChooser.showOpenDialog(stage);
 
@@ -115,7 +114,7 @@ public class Controller {
 
     @FXML
     public void doBackup() {
-        Thread backup = new Backup(settings.getFilesToBackupPath(),settings.getDestination());
+        Thread backup = new Backup(settings.getFilesToBackupPath(),settings.getDestination() );
         backup.start();
     }
 

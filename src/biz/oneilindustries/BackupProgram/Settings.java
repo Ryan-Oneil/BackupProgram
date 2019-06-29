@@ -18,7 +18,7 @@ public class Settings {
     public Settings() {
         if (filesToBackupPath == null) {
             filesToBackupPath = new Locations();
-            if (new File("locations.txt").isFile()) {
+            if (new File("Backup/locations.txt").isFile()) {
                 getSettings();
             }
         }
@@ -40,21 +40,25 @@ public class Settings {
         destination = destinationPath;
     }
 
-    public Boolean saveSettings() {
-        try( BufferedWriter locationFile = new BufferedWriter(new FileWriter("locations.txt", false))   ) {
+    public void saveSettings() {
+        File programFileDir = new File("Backup/");
+        if (!programFileDir.exists()) {
+            programFileDir.mkdir();
+        }
+        try(BufferedWriter locationFile = new BufferedWriter(new FileWriter("Backup/locations.txt", false))   ) {
             for (Location location : filesToBackupPath.getLocations()) {
                 locationFile.write(location.getFolderName() + "," + location.getFolderPath() + "\n");
             }
-            locationFile.write("backupDest," + destination.getFolderName() + "," + destination.getFolderPath());
-            return true;
+            if (destination != null) {
+                locationFile.write("backupDest," + destination.getFolderName() + "," + destination.getFolderPath());
+            }
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
         }
     }
 
     private void getSettings() {
-        try(Scanner scanner = new Scanner(new BufferedReader(new FileReader("locations.txt")))) {
+        try(Scanner scanner = new Scanner(new BufferedReader(new FileReader("Backup/locations.txt")))) {
             scanner.useDelimiter(",");
             while (scanner.hasNextLine()) {
                 String fileName = scanner.next();
@@ -62,10 +66,10 @@ public class Settings {
 
                 if (!fileName.equals("backupDest")) {
                     String filePath = scanner.nextLine();
-                    System.out.println(fileName + " " + filePath);
                     filesToBackupPath.addLocation(new Location(fileName, filePath));
                 }else {
                     fileName = scanner.next();
+                    scanner.skip(scanner.delimiter());
                     String filePath = scanner.nextLine();
                     destination = new Location(fileName, filePath);
                 }
