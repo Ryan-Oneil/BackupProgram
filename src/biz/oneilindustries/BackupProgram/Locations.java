@@ -14,10 +14,6 @@ public class Locations {
         return locations;
     }
 
-    public void setLocations(ArrayList<Location> locations) {
-        this.locations = locations;
-    }
-
     public boolean addLocation(Location location) {
         if (!this.locations.contains(location)) {
             this.locations.add(location);

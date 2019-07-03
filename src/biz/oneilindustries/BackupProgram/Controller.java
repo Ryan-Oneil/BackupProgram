@@ -2,6 +2,7 @@ package biz.oneilindustries.BackupProgram;
 
 import java.io.File;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -38,10 +39,29 @@ public class Controller {
     @FXML
     private TextField backupDest;
 
+    @FXML
+    private TableView previousBackupsTable;
+
+    @FXML
+    private TableColumn previousBackupDate;
+
+    @FXML
+    private TableColumn previousBackupSize;
+
+    @FXML
+    private TableColumn previousBackupPath;
+
+    @FXML
+    private Button backupButton;
+
     private Stage stage;
+
+    private BackupLogging backupLogging;
 
     public void initialize() {
         settings = new Settings();
+        backupLogging = new BackupLogging();
+
         foldersToBackup = settings.getFilesToBackupPath();
         backupDestPath = settings.getDestination();
         backupDest.setText(backupDestPath.getFolderPath());
@@ -49,7 +69,12 @@ public class Controller {
         folderName.setCellValueFactory(new PropertyValueFactory<>("folderName"));
         folderPath.setCellValueFactory(new PropertyValueFactory<>("folderPath"));
 
-        updateTableList(foldersToBackup, backupFoldersTable);
+        previousBackupDate.setCellValueFactory(new PropertyValueFactory<>("creationDate"));
+        previousBackupSize.setCellValueFactory(new PropertyValueFactory<>("totalBackupSize"));
+        previousBackupPath.setCellValueFactory(new PropertyValueFactory<>("backupPath"));
+
+        updateTableList();
+        updatePreviousBackupTableList();
     }
 
     public void setupStage(Stage stage) {
@@ -59,7 +84,7 @@ public class Controller {
     @FXML
     public void addLocation(File fileToBackup) {
         foldersToBackup.addLocation(new Location(fileToBackup.getName(),fileToBackup.getAbsolutePath()));
-        updateTableList(foldersToBackup, backupFoldersTable);
+        updateTableList();
     }
 
     @FXML
@@ -78,12 +103,18 @@ public class Controller {
         }
     }
 
-    private void updateTableList(Locations locations, TableView table) {
-        table.getItems().clear();
-        for (Location path: locations.getLocations()) {
-            table.getItems().add(path);
+    private void updateTableList() {
+        backupFoldersTable.getItems().clear();
+        for (Location path: foldersToBackup.getLocations()) {
+            backupFoldersTable.getItems().add(path);
         }
-        settings.setFilesToBackupPath(locations);
+        settings.setFilesToBackupPath(foldersToBackup);
+    }
+
+    private void updatePreviousBackupTableList() {
+        for(BackupInformation backupInformation : backupLogging.getPreviousBackups()) {
+            previousBackupsTable.getItems().add(backupInformation);
+        }
     }
 
     @FXML
@@ -109,12 +140,13 @@ public class Controller {
     @FXML
     public void deleteFolder() {
         foldersToBackup.deleteLocation(backupFoldersTable.getSelectionModel().getSelectedItem());
-        updateTableList(foldersToBackup, backupFoldersTable);
+        updateTableList();
     }
 
     @FXML
     public void doBackup() {
-        Thread backup = new Backup(settings.getFilesToBackupPath(),settings.getDestination() );
+        backupButton.setDisable(true);
+        Thread backup = new Backup(settings.getFilesToBackupPath(),settings.getDestination(),backupButton,previousBackupsTable);
         backup.start();
     }
 

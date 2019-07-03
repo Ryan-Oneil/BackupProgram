@@ -19,6 +19,7 @@ public class Settings {
         if (filesToBackupPath == null) {
             filesToBackupPath = new Locations();
             if (new File("Backup/locations.txt").isFile()) {
+                destination = new Location();
                 getSettings();
             }
         }

@@ -1,12 +1,15 @@
 package biz.oneilindustries.BackupProgram;
 
+import java.io.File;
 import java.util.Objects;
+import org.apache.commons.io.FileUtils;
 
 public class BackupInformation {
 
     private String creationDate;
     private String backupPath;
     private Locations filesBackedUp;
+    private String totalBackupSize;
 
     public BackupInformation(String creationDate, String backupPath, Locations filesBackedUp) {
         this.creationDate = creationDate;
@@ -14,15 +17,18 @@ public class BackupInformation {
         this.filesBackedUp = filesBackedUp;
     }
 
+    public BackupInformation(String creationDate, String backupPath, Locations filesBackedUp, String totalBackupSize) {
+        this.creationDate = creationDate;
+        this.backupPath = backupPath;
+        this.filesBackedUp = filesBackedUp;
+        this.totalBackupSize = totalBackupSize;
+    }
+
     public BackupInformation() {
     }
 
     public String getCreationDate() {
         return creationDate;
-    }
-
-    public void setCreationDate(String creationDate) {
-        this.creationDate = creationDate;
     }
 
     public String getBackupPath() {
@@ -33,14 +39,13 @@ public class BackupInformation {
         this.backupPath = backupPath;
     }
 
+    public String getTotalBackupSize() {
+        return totalBackupSize;
+    }
+
     public Locations getFilesBackedUp() {
         return filesBackedUp;
     }
-
-    public void setFilesBackedUp(Locations filesBackedUp) {
-        this.filesBackedUp = filesBackedUp;
-    }
-
 
     @Override
     public boolean equals(Object o) {
@@ -67,4 +72,17 @@ public class BackupInformation {
             ", filesBackedUp=" + filesBackedUp +
             '}';
     }
+
+    private long getSizeMBytes() {
+        File file = new File(this.backupPath);
+        if (file.exists() && file.isDirectory()) {
+            return FileUtils.sizeOfDirectory(file) / 1000000;
+        }
+        return 0;
+    }
+
+    public void updateSize() {
+        this.totalBackupSize = getSizeMBytes() + "MB";
+    }
+
 }

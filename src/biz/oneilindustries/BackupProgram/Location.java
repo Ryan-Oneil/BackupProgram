@@ -12,20 +12,15 @@ public class Location {
         this.folderPath = folderPath;
     }
 
+    public Location() {
+    }
+
     public String getFolderName() {
         return folderName;
     }
 
-    public void setFolderName(String folderName) {
-        this.folderName = folderName;
-    }
-
     public String getFolderPath() {
         return folderPath;
-    }
-
-    public void setFolderPath(String folderPath) {
-        this.folderPath = folderPath;
     }
 
     @Override
