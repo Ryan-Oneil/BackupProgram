@@ -14,22 +14,23 @@ import java.util.Scanner;
 public class BackupLogging {
 
     private static ArrayList<BackupInformation> previousBackups;
+    private static boolean outOfDateLog;
 
     public BackupLogging() {
         initializeFile();
         if (previousBackups == null) {
-            System.out.println("Creating fresh backupLog");
             previousBackups = new ArrayList<>();
+            outOfDateLog = false;
             populateArray();
         }
     }
 
-    public ArrayList<BackupInformation> getPreviousBackups() {
-        return previousBackups;
+    public static boolean isOutOfDateLog() {
+        return outOfDateLog;
     }
 
-    public void setPreviousBackups(ArrayList<BackupInformation> newPreviousBackups) {
-        previousBackups = newPreviousBackups;
+    public ArrayList<BackupInformation> getPreviousBackups() {
+        return previousBackups;
     }
 
     private void initializeFile() {
@@ -42,6 +43,7 @@ public class BackupLogging {
     //Creates backup location and changes the path number if it already exists
     public BackupInformation createBackup(Locations filesBackedUp, String backupDest) {
         BackupInformation backupInformation = new BackupInformation(LocalDate.now().toString(),backupDest,filesBackedUp);
+
         while (previousBackups.contains(backupInformation)) {
             int length = backupInformation.getBackupPath().length();
             String newName = backupInformation.getBackupPath().substring(0, length - 1);
@@ -55,11 +57,7 @@ public class BackupLogging {
     public void logBackup(BackupInformation backupInformation) {
         backupInformation.updateSize();
         try(BufferedWriter locationFile = new BufferedWriter(new FileWriter("Backup/previousBackups.txt",true))) {
-            locationFile.write(  backupInformation.getBackupPath() + "," + backupInformation.getCreationDate() + "," + backupInformation.getTotalBackupSize() + "\n");
-            for (Location location : backupInformation.getFilesBackedUp().getLocations()) {
-                locationFile.write(location.getFolderName() + "," + location.getFolderPath() + "\n");
-            }
-            locationFile.write("EOL," + "\n");
+            writeToFile(locationFile, backupInformation);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -88,7 +86,13 @@ public class BackupLogging {
                     String folderPath = scanner.nextLine();
                     locations.addLocation(new Location(folderName,folderPath));
                 }
-                previousBackups.add(new BackupInformation(creationDate, backupPath, locations,totalSize));
+                BackupInformation newBackup = new BackupInformation(creationDate, backupPath, locations,totalSize);
+                //Checks to ensure the backup still exists if not we dump it
+                if (new File(newBackup.getBackupPath()).isDirectory()) {
+                    previousBackups.add(newBackup);
+                } else {
+                    outOfDateLog = true;
+                }
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -98,5 +102,28 @@ public class BackupLogging {
     public BackupInformation getLastBackup() {
         int lastIndex = previousBackups.size() - 1;
         return previousBackups.get(lastIndex);
+    }
+
+    //Overwrites the whole file instead of appending
+    public void updateLog() {
+        try(BufferedWriter locationFile = new BufferedWriter(new FileWriter("Backup/previousBackups.txt",false))) {
+
+            for (BackupInformation backupInformation : previousBackups) {
+                writeToFile(locationFile, backupInformation);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void writeToFile(BufferedWriter locationFile, BackupInformation backupInformation) throws IOException {
+        locationFile.write(backupInformation.getBackupPath() + "," + backupInformation.getCreationDate() + "," + backupInformation.getTotalBackupSize()
+                + "\n");
+
+        for (Location location : backupInformation.getFilesBackedUp().getLocations()) {
+            locationFile.write(location.getFolderName() + "," + location.getFolderPath() + "\n");
+        }
+
+        locationFile.write("EOL," + "\n");
     }
 }

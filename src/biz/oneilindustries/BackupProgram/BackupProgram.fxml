@@ -15,14 +15,14 @@
    <children>
       <AnchorPane fx:id="homePage" layoutY="76.0" minWidth="-Infinity" prefHeight="531.0" prefWidth="600.0" style="-fx-background-color: #3D4956;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="76.0">
          <children>
-            <Button fx:id="backupButton" layoutX="274.0" layoutY="433.0" mnemonicParsing="false" onAction="#doBackup" text="Backup" />
-            <Label layoutX="115.0" layoutY="390.0" text="Backup Destination" textFill="WHITE">
+            <Button fx:id="backupButton" layoutX="274.0" layoutY="482.0" mnemonicParsing="false" onAction="#doBackup" text="Backup" />
+            <Label layoutX="115.0" layoutY="437.0" text="Backup Destination" textFill="WHITE">
                <font>
                   <Font size="17.0" />
                </font>
             </Label>
-            <TextField fx:id="backupDest" layoutX="284.0" layoutY="391.0" onMouseClicked="#chooseDirectoryDest" />
-            <TableView fx:id="previousBackupsTable" layoutX="22.0" layoutY="14.0" prefHeight="360.0" prefWidth="561.0">
+            <TextField fx:id="backupDest" layoutX="284.0" layoutY="438.0" onMouseClicked="#chooseDirectoryDest" />
+            <TableView fx:id="previousBackupsTable" layoutX="9.0" layoutY="14.0" prefHeight="414.0" prefWidth="582.0">
               <columns>
                 <TableColumn fx:id="previousBackupDate" prefWidth="150.0" text="Date" />
                 <TableColumn fx:id="previousBackupSize" minWidth="0.0" prefWidth="142.0" text="Size" />
@@ -39,7 +39,7 @@
                         <Image url="@images/icons8-home-480.png" />
                      </image>
                   </ImageView>
-                  <ImageView fitHeight="68.0" fitWidth="141.0" onMouseClicked="#openSettingsPage" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="backupPathsPage" fitHeight="68.0" fitWidth="141.0" onMouseClicked="#openSettingsPage" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@images/setting.png" />
                      </image>

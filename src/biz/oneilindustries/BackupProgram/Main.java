@@ -23,6 +23,11 @@ public class Main extends Application {
     public void stop(){
         Settings settings = new Settings();
         settings.saveSettings();
+
+        if (BackupLogging.isOutOfDateLog()) {
+            BackupLogging backupLogging = new BackupLogging();
+            backupLogging.updateLog();
+        }
     }
 
     public static void main(String[] args) {

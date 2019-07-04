@@ -45,7 +45,7 @@ public class Backup extends Thread {
 
     @Override
     public void run() {
-        BackupInformation currentBackup = backupLogging.createBackup(this.directoriesToBackup,destination.getFolderPath() + "/"+ (LocalDate.now().toString() + " - 1"));
+        BackupInformation currentBackup = backupLogging.createBackup(this.directoriesToBackup,destination.getFolderPath() + "\\"+ (LocalDate.now().toString() + " - 1"));
 
         File dest = new File(currentBackup.getBackupPath());
 
