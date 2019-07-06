@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="MainWindow" minHeight="-Infinity" minWidth="-Infinity" prefHeight="548.0" prefWidth="600.0" style="-fx-background-color: #3D4956;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="biz.oneilindustries.BackupProgram.Controller">
+<AnchorPane fx:id="MainWindow" minHeight="-Infinity" minWidth="-Infinity" prefHeight="548.0" prefWidth="600.0" style="-fx-background-color: #3D4956;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="biz.oneilindustries.backup_program.Controller">
    <children>
       <AnchorPane fx:id="homePage" layoutY="76.0" minWidth="-Infinity" prefHeight="531.0" prefWidth="600.0" style="-fx-background-color: #3D4956;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="76.0">
          <children>
@@ -26,7 +26,7 @@
               <columns>
                 <TableColumn fx:id="previousBackupDate" prefWidth="150.0" text="Date" />
                 <TableColumn fx:id="previousBackupSize" minWidth="0.0" prefWidth="142.0" text="Size" />
-                  <TableColumn fx:id="previousBackupPath" minWidth="0.0" prefWidth="268.0" text="Backup Path" />
+                  <TableColumn fx:id="previousBackupPath" minWidth="0.0" prefWidth="289.0" text="Backup Path" />
               </columns>
             </TableView>
          </children></AnchorPane>

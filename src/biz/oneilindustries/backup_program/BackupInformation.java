@@ -1,4 +1,4 @@
-package biz.oneilindustries.BackupProgram;
+package biz.oneilindustries.backup_program;
 
 import java.io.File;
 import java.util.Objects;

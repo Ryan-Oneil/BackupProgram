@@ -1,4 +1,4 @@
-package biz.oneilindustries.BackupProgram;
+package biz.oneilindustries.backup_program;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -8,20 +8,29 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Settings {
 
-    private static Locations filesToBackupPath;
-    private static Location destination;
-    //private static final Logger logger = LogManager.getLogger(Settings.class);
+    private static Locations filesToBackupPath = new Locations();
+    private static Location destination = new Location();
+    private static final String BACKUP_PROGRAM_BASE_DIRECTORY  = "Backup/";
+    private static final String BACKUP_LOCATIONS = "Backup/locations.txt";
+    private static final Logger logger = LogManager.getLogger(Settings.class);
 
     public Settings() {
-        if (filesToBackupPath == null) {
-            filesToBackupPath = new Locations();
-            if (new File("Backup/locations.txt").isFile()) {
-                destination = new Location();
-                getSettings();
-            }
+        initializeDirectory();
+        if (new File(BACKUP_LOCATIONS).isFile()) {
+            getSettings();
+        }
+    }
+
+    private void initializeDirectory() {
+        File programFileDir = new File(BACKUP_PROGRAM_BASE_DIRECTORY);
+
+        if (!programFileDir.exists()) {
+            programFileDir.mkdir();
         }
     }
 
@@ -29,7 +38,7 @@ public class Settings {
         return filesToBackupPath;
     }
 
-    public void setFilesToBackupPath(Locations locations) {
+    public static void setFilesToBackupPath(Locations locations) {
         filesToBackupPath = locations;
     }
 
@@ -37,16 +46,16 @@ public class Settings {
         return destination;
     }
 
-    public void setDestination(Location destinationPath) {
+    public static void setDestination(Location destinationPath) {
         destination = destinationPath;
     }
 
-    public void saveSettings() {
-        File programFileDir = new File("Backup/");
+    public static void saveSettings() {
+        File programFileDir = new File(BACKUP_PROGRAM_BASE_DIRECTORY);
         if (!programFileDir.exists()) {
             programFileDir.mkdir();
         }
-        try(BufferedWriter locationFile = new BufferedWriter(new FileWriter("Backup/locations.txt", false))   ) {
+        try(BufferedWriter locationFile = new BufferedWriter(new FileWriter(BACKUP_LOCATIONS, false))   ) {
             for (Location location : filesToBackupPath.getLocations()) {
                 locationFile.write(location.getFolderName() + "," + location.getFolderPath() + "\n");
             }
@@ -54,12 +63,12 @@ public class Settings {
                 locationFile.write("backupDest," + destination.getFolderName() + "," + destination.getFolderPath());
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error Saving Settings", e);
         }
     }
 
     private void getSettings() {
-        try(Scanner scanner = new Scanner(new BufferedReader(new FileReader("Backup/locations.txt")))) {
+        try(Scanner scanner = new Scanner(new BufferedReader(new FileReader(BACKUP_LOCATIONS)))) {
             scanner.useDelimiter(",");
             while (scanner.hasNextLine()) {
                 String fileName = scanner.next();
@@ -76,7 +85,7 @@ public class Settings {
                 }
             }
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            logger.error("Error getting Settings", e);
         }
     }
 }

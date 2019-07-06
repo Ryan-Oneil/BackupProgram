@@ -1,4 +1,4 @@
-package biz.oneilindustries.BackupProgram;
+package biz.oneilindustries.backup_program;
 
 import java.io.File;
 import javafx.fxml.FXML;
@@ -159,7 +159,7 @@ public class Controller {
         if (directory != null) {
             backupDestPath = new Location(directory.getName(),directory.getAbsolutePath());
             backupDest.setText(backupDestPath.getFolderPath());
-            settings.setDestination(backupDestPath);
+            Settings.setDestination(backupDestPath);
         }
     }
 }

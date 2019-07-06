@@ -1,4 +1,4 @@
-package biz.oneilindustries.BackupProgram;
+package biz.oneilindustries.backup_program;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -21,8 +21,7 @@ public class Main extends Application {
 
     @Override
     public void stop(){
-        Settings settings = new Settings();
-        settings.saveSettings();
+        Settings.saveSettings();
 
         if (BackupLogging.isOutOfDateLog()) {
             BackupLogging backupLogging = new BackupLogging();

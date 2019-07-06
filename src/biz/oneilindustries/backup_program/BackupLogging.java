@@ -1,4 +1,4 @@
-package biz.oneilindustries.BackupProgram;
+package biz.oneilindustries.backup_program;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -10,19 +10,23 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class BackupLogging {
 
     private static ArrayList<BackupInformation> previousBackups;
-    private static boolean outOfDateLog;
+    private static boolean outOfDateLog = false;
+    private static final String PREVIOUS_BACKUPS_TXT = "Backup/previousBackups.txt";
+    private static final Logger logger = LogManager.getLogger(BackupLogging.class);
 
     public BackupLogging() {
         initializeFile();
         if (previousBackups == null) {
             previousBackups = new ArrayList<>();
-            outOfDateLog = false;
             populateArray();
         }
+
     }
 
     public static boolean isOutOfDateLog() {
@@ -35,8 +39,17 @@ public class BackupLogging {
 
     private void initializeFile() {
         File programFileDir = new File("Backup/");
+        File previousBackupsTextFile = new File(PREVIOUS_BACKUPS_TXT);
+
         if (!programFileDir.exists()) {
             programFileDir.mkdir();
+        }
+        if (!previousBackupsTextFile.isFile()) {
+            try {
+                previousBackupsTextFile.createNewFile();
+            } catch (IOException e) {
+                logger.error("Error creating previous backup text file", e);
+            }
         }
     }
 
@@ -56,15 +69,15 @@ public class BackupLogging {
 
     public void logBackup(BackupInformation backupInformation) {
         backupInformation.updateSize();
-        try(BufferedWriter locationFile = new BufferedWriter(new FileWriter("Backup/previousBackups.txt",true))) {
+        try(BufferedWriter locationFile = new BufferedWriter(new FileWriter(PREVIOUS_BACKUPS_TXT,true))) {
             writeToFile(locationFile, backupInformation);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error writing backup log", e);
         }
     }
 
     public void populateArray() {
-        try (Scanner scanner = new Scanner(new BufferedReader(new FileReader("Backup/previousBackups.txt")))) {
+        try (Scanner scanner = new Scanner(new BufferedReader(new FileReader(PREVIOUS_BACKUPS_TXT)))) {
             scanner.useDelimiter(",");
             while(scanner.hasNextLine()) {
                 //Getting BackupInformation object data
@@ -95,7 +108,7 @@ public class BackupLogging {
                 }
             }
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            logger.error("Error getting previous backups from file", e);
         }
     }
 
@@ -106,13 +119,13 @@ public class BackupLogging {
 
     //Overwrites the whole file instead of appending
     public void updateLog() {
-        try(BufferedWriter locationFile = new BufferedWriter(new FileWriter("Backup/previousBackups.txt",false))) {
+        try(BufferedWriter locationFile = new BufferedWriter(new FileWriter(PREVIOUS_BACKUPS_TXT,false))) {
 
             for (BackupInformation backupInformation : previousBackups) {
                 writeToFile(locationFile, backupInformation);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error updating previous backup logs on program exit", e);
         }
     }
 

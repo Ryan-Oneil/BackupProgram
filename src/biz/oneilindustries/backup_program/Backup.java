@@ -1,4 +1,4 @@
-package biz.oneilindustries.BackupProgram;
+package biz.oneilindustries.backup_program;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,6 +7,8 @@ import javafx.application.Platform;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Backup extends Thread {
 
@@ -15,6 +17,7 @@ public class Backup extends Thread {
     private BackupLogging backupLogging;
     private Button backupButton;
     private TableView backupTable;
+    private static final Logger logger = LogManager.getLogger(Backup.class);
 
     public Backup(Locations directoriesToBackup, Location destination, Button backupButton, TableView backupTable) {
         this.directoriesToBackup = directoriesToBackup;
@@ -31,7 +34,7 @@ public class Backup extends Thread {
         try {
             FileUtils.copyDirectoryToDirectory(directoryToBackup,destinationDirectory);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error copying directory",e);
         }
     }
 
@@ -39,7 +42,7 @@ public class Backup extends Thread {
         try {
             FileUtils.copyFileToDirectory(fileToBackup,destinationDirectory,true);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error copying file",e);
         }
     }
 
